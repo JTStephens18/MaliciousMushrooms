@@ -50,6 +50,7 @@ function App() {
     freeMintTxn.wait();
     console.log("Free mint: ", freeMintTxn);
   }
+  
 
   const withdraw = async () => {
     const withdrawTxn = await mintingMushroomContract.withdrawBalance(wallet, ethers.utils.parseEther("0.01"));
