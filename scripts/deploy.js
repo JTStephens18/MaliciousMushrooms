@@ -7,9 +7,16 @@
 const hre = require("hardhat");
 
 async function main() {
-  const MintingMushroomFactory = await hre.ethers.getContractFactory("MintingMushroom");
+
   const owner = await hre.ethers.getSigners();
-  const mintingMushroom = await MintingMushroomFactory.deploy(owner[0].address);
+
+  const MetadataFactory = await hre.ethers.getContractFactory("Metadata");
+  const metadata = await MetadataFactory.deploy(owner[0].address);
+  await metadata.deployed();
+  console.log("Metadata address: ", metadata.address);
+
+  const MintingMushroomFactory = await hre.ethers.getContractFactory("MintingMushroom");
+  const mintingMushroom = await MintingMushroomFactory.deploy(owner[0].address, metadata.address);
   await mintingMushroom.deployed();
   console.log("Minting Mushroom address: ", mintingMushroom.address);
 }
