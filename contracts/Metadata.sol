@@ -24,8 +24,29 @@ contract Metadata is AccessControl, Ownable {
     bytes32 public constant UPDATER_ROLE = keccak256("UPDATER_ROLE");
     bytes32 public constant CONTRACT_ROLE = keccak256("CONTRACT_ROLE");
 
-    string public _baseTokenURI;
+    string public _baseTokenURI = "https://maliciousmushrooms.com/images/";
     string constant _dataUriExtension = "data:application/json;base64,";
+
+    struct Mushroom {
+        uint256 id;
+        //string name;
+        //string description;
+        uint32 spores;
+        string backgroundColor;
+        string head;
+        string eyes;
+        string mouth;
+        string element;
+        string weapon;
+        string armor;
+        string accessory;
+        // string background;
+        // string aura;
+        //string image;
+        uint256 level;
+    }
+
+    mapping(uint256 => Mushroom) public mushroomAttributes;
 
     constructor(address admin) {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
@@ -106,38 +127,79 @@ contract Metadata is AccessControl, Ownable {
         return _dataUriExtension;
     }
 
-    function makeTokenURI(
-        uint256 _tokenId,
-        string memory weapon,
-        string memory armor,
-        string memory accessory,
-        string memory element,
-        uint256 level,
-        uint256 spores
-    ) public view returns (string memory) {
-        // Mushroom memory MushroomAttributes = mushroomTokenAttributes[_tokenId];
+    function setMushroomData(Mushroom calldata base)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[base.id] = base;
+    }
+
+    function getMushroomData(uint256 _tokenId)
+        external
+        returns (Mushroom memory)
+    {
+        return mushroomAttributes[_tokenId];
+    }
+
+    function getElement(uint256 _tokenId)
+        external
+        view
+        returns (string memory)
+    {
+        return mushroomAttributes[_tokenId].element;
+    }
+
+    function getMushroomBytes(uint256 _tokenId)
+        external
+        view
+        returns (bytes memory)
+    {
+        return abi.encode(mushroomAttributes[_tokenId]);
+    }
+
+    function makeTokenURI(uint256 _tokenId)
+        public
+        onlyRole(UPDATER_ROLE)
+        returns (string memory)
+    {
+        Mushroom memory MushroomAttributes = mushroomAttributes[_tokenId];
         string memory json = Base64.encode(
             abi.encodePacked(
                 '{"name": "Mushroom #',
                 Strings.toString(_tokenId),
-                '", "description": "Malicious Mushrooms Rawr", "image": "https://ipfs.io/ipfs/QmR5tYrw1rqrKmNrma9BkfESag9PJhBCcNMhV31tZs5vZ1?filename=1.png", "attributes": [',
+                '", "description": "Malicious Mushrooms Rawr", "image": "',
+                string(
+                    abi.encodePacked(
+                        _baseTokenURI,
+                        mushroomAttributes[_tokenId].backgroundColor,
+                        mushroomAttributes[_tokenId].head,
+                        mushroomAttributes[_tokenId].eyes,
+                        mushroomAttributes[_tokenId].mouth,
+                        mushroomAttributes[_tokenId].accessory,
+                        mushroomAttributes[_tokenId].weapon,
+                        mushroomAttributes[_tokenId].armor
+                    )
+                ),
+                '" "attributes": [',
                 '{"trait_type": "Weapon", "value": "',
-                weapon,
+                mushroomAttributes[_tokenId].weapon,
                 '"},',
                 '{"trait_type": "Armor", "value": "',
-                armor,
+                mushroomAttributes[_tokenId].armor,
                 '"},',
                 '{"trait_type": "Accessory", "value": "',
-                accessory,
+                mushroomAttributes[_tokenId].accessory,
                 '"},',
                 '{"trait_type": "Element", "value": "',
-                element,
+                mushroomAttributes[_tokenId].element,
                 '"},',
                 '{"trait_type": "Level", "value": ',
-                Strings.toString(level),
+                Strings.toString(mushroomAttributes[_tokenId].level),
+                // mushroomAttributes[_token.id].head,
                 "},",
                 '{"trait_type": "Spores", "value": ',
-                Strings.toString(spores),
+                Strings.toString(mushroomAttributes[_tokenId].spores),
+                // mushroomAttributes[_token.id].eyes,
                 "}]}"
                 // '{"name": "Mushroom #',
                 // Strings.toString(_tokenId),
@@ -147,3 +209,16 @@ contract Metadata is AccessControl, Ownable {
         return string(abi.encodePacked("data:application/json;base64,", json));
     }
 }
+
+// string(
+//                     abi.encodePacked(
+//                         _baseTokenURI,
+//                         mushroomAttributes[_token.id].backgroundColor,
+//                         mushroomAttributes[_token.id].head,
+//                         mushroomAttributes[_token.id].eyes,
+//                         mushroomAttributes[_token.id].mouth,
+//                         mushroomAttributes[_token.id].accessory,
+//                         mushroomAttributes[_token.id].weapon,
+//                         mushroomAttributes[_token.id].armor
+//                     )
+//                 ),

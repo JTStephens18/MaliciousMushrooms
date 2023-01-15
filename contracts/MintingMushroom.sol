@@ -56,31 +56,54 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     uint16 public _maxPerWallet = 100;
     uint256 public _mintPrice = 0.01 ether;
 
-    IMetadata public _metadataContract;
+    // IMetadata public _metadataContract;
 
-    string[] weapons = [
-        "Axe",
-        "Sword",
-        "Dagger",
-        "Scythe",
-        "Stick",
-        "Mallet",
-        "Spear"
-    ];
-    string[] elements = [
-        "Poison",
-        "Lightning",
-        "Grass",
-        "Fire",
-        "Ice",
-        "Earth"
-    ];
+    // string[] backgroundColors = [
+    //     "Mint",
+    //     "Green",
+    //     "Orange",
+    //     "Yellow",
+    //     "Blue",
+    //     "Purple"
+    // ];
+    // string[] heads = ["Pointy", "Oval", "Round", "Flat"];
+    // string[] eyes = [
+    //     "Blank",
+    //     "Blush",
+    //     "X",
+    //     "Intrigued",
+    //     "Angry",
+    //     "Tired",
+    //     "Crossed",
+    //     "Rolled"
+    // ];
+    // string[] weapons = [
+    //     "Axe",
+    //     "Sword",
+    //     "Dagger",
+    //     "Scythe",
+    //     "Stick",
+    //     "Mallet",
+    //     "Spear"
+    // ];
+    // string[] elements = [
+    //     "Poison",
+    //     "Lightning",
+    //     "Grass",
+    //     "Fire",
+    //     "Ice",
+    //     "Earth"
+    // ];
 
     struct Mushroom {
         uint256 id;
         //string name;
         //string description;
         uint32 spores;
+        string backgroundColor;
+        string head;
+        string eyes;
+        string mouth;
         string element;
         string weapon;
         string armor;
@@ -91,23 +114,21 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         uint256 level;
     }
 
-    struct test {
-        uint256 id;
-        string test;
-    }
+    // struct test {
+    //     uint256 id;
+    //     string test;
+    // }
 
     // Mapping of tokenID to the mushroom attributes
     mapping(uint256 => Mushroom) public mushroomTokenAttributes;
 
-    constructor(address admin, address metadataContract)
-        ERC721("Malicious Mushroom", "MUSH")
-    {
+    constructor(address admin) ERC721("Malicious Mushroom", "MUSH") {
         // Increment tokenIDs to start at 1
         _tokenIds.increment();
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(UPDATER_ROLE, msg.sender);
         _grantRole(CONTRACT_ROLE, msg.sender);
-        _metadataContract = IMetadata(metadataContract);
+        // _metadataContract = IMetadata(metadataContract);
     }
 
     //overides
@@ -155,15 +176,22 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
             "Max per wallet reached"
         );
         _mint(wallet, newItemId);
-        string memory weapon = weapons[newItemId % weapons.length];
-        string memory element = elements[newItemId % elements.length];
+        // string memory weapon = weapons[newItemId % weapons.length];
+        // string memory element = elements[newItemId % elements.length];
+        // string memory head = string(
+        //     abi.encodePacked(heads[newItemId % heads.length], " ", element)
+        // );
         mushroomTokenAttributes[newItemId] = Mushroom({
             id: newItemId,
+            backgroundColor: "Red",
+            head: "head",
+            eyes: "Red",
+            mouth: "Red",
             spores: 0,
-            weapon: weapon,
+            weapon: "weapon",
             armor: "None",
             accessory: "Necklace",
-            element: element,
+            element: "element",
             level: 0
         });
         _tokenIds.increment();
@@ -201,27 +229,27 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         payable(_to).transfer(_value);
     }
 
-    function checkIfHasNFT(address owner)
-        external
-        view
-        returns (Mushroom[] memory nft)
-    {
-        uint256 bal = balanceOf(owner);
-        Mushroom[] memory nfts = new Mushroom[](bal);
-        for (uint256 i = 0; i < bal; i++) {
-            uint256 tokenId = tokenOfOwnerByIndex(owner, i);
-            nfts[i] = mushroomTokenAttributes[tokenId];
-        }
-        return nfts;
-    }
+    // function checkIfHasNFT(address owner)
+    //     external
+    //     view
+    //     returns (Mushroom[] memory nft)
+    // {
+    //     uint256 bal = balanceOf(owner);
+    //     Mushroom[] memory nfts = new Mushroom[](bal);
+    //     for (uint256 i = 0; i < bal; i++) {
+    //         uint256 tokenId = tokenOfOwnerByIndex(owner, i);
+    //         nfts[i] = mushroomTokenAttributes[tokenId];
+    //     }
+    //     return nfts;
+    // }
 
-    function getMushroom(uint256 tokenId)
-        external
-        view
-        returns (Mushroom memory mushroom)
-    {
-        return mushroomTokenAttributes[tokenId];
-    }
+    // function getMushroom(uint256 tokenId)
+    //     external
+    //     view
+    //     returns (Mushroom memory mushroom)
+    // {
+    //     return mushroomTokenAttributes[tokenId];
+    // }
 
     function increaseSpores(uint256 tokenId, uint32 amount)
         external
@@ -279,22 +307,22 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     //     mushroomTokenAttributes[tokenId].element = element;
     // }
 
-    function tokenURI(uint256 _tokenId)
-        public
-        view
-        override
-        returns (string memory)
-    {
-        Mushroom memory mushroom = mushroomTokenAttributes[_tokenId];
-        return
-            _metadataContract.makeTokenURI(
-                _tokenId,
-                mushroom.weapon,
-                mushroom.armor,
-                mushroom.accessory,
-                mushroom.element,
-                mushroom.level,
-                mushroom.spores
-            );
-    }
+    // function tokenURI(uint256 _tokenId)
+    //     public
+    //     view
+    //     override
+    //     returns (string memory)
+    // {
+    //     Mushroom memory mushroom = mushroomTokenAttributes[_tokenId];
+    //     return
+    //         _metadataContract.makeTokenURI(
+    //             _tokenId,
+    //             mushroom.weapon,
+    //             mushroom.armor,
+    //             mushroom.accessory,
+    //             mushroom.element,
+    //             mushroom.level,
+    //             mushroom.spores
+    //         );
+    // }
 }

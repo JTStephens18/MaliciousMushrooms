@@ -17,9 +17,15 @@ module.exports = {
     goerli: {
       url: process.env.REACT_APP_ALCHEMY_API_KEY,
       accounts: [process.env.REACT_APP_PRIVATE_KEY],
+      gas: "auto",
+      gasPrice: "auto",
+      gasMultiplier: 2,
     },
   },
   paths: {
     artifacts: './src/utils/artifacts',
-  }
+  },
+  // mocha: {
+  //   timeout: 100000000
+  // }
 };

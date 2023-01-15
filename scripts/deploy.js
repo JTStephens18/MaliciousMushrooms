@@ -16,7 +16,7 @@ async function main() {
   console.log("Metadata address: ", metadata.address);
 
   const MintingMushroomFactory = await hre.ethers.getContractFactory("MintingMushroom");
-  const mintingMushroom = await MintingMushroomFactory.deploy(owner[0].address, metadata.address);
+  const mintingMushroom = await MintingMushroomFactory.deploy(owner[0].address);
   await mintingMushroom.deployed();
   console.log("Minting Mushroom address: ", mintingMushroom.address);
 }
