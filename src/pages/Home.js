@@ -57,10 +57,56 @@ function Home() {
   }
 
   const freeMint = async () => {
-    // const freeMintTxn = await mintingMushroomContract.mintNFT(wallet, {value: ethers.utils.parseEther("0.01")});
-    const freeMintTxn = await mintingMushroomContract.freeMint(wallet);
+    const data = {
+      id: 1,
+      spores: 0,
+      backgroundColor: "blue",
+      head: "round",
+      eyes: "Wide",
+      mouth: "Open",
+      element: "Fire",
+      weapon: "Axe",
+      armor: "None",
+      accessory: "Necklace",
+      level: 3
+  };
+  console.log("wallet: ", wallet);
+    // const freeMintTxn = await mintingMushroomContract.mintNFT(wallet, data, {value: ethers.utils.parseEther("0.01"), from: wallet});
+    const freeMintTxn = await mintingMushroomContract.freeMint(wallet, data);
     freeMintTxn.wait();
     console.log("Free mint: ", freeMintTxn);
+
+    // mintingMushroomContract.on("part1Made", (tokenId, part1) => {
+    //   let data = {
+    //     tokenId: parseInt(tokenId._hex),
+    //     part1: atob(part1)
+    //   }
+    //   console.log("part1Made: ", data);
+    // })
+
+    // mintingMushroomContract.on("part1Got", (tokenId, mushroom) => {
+    //   let data = {
+    //     tokenId: parseInt(tokenId._hex),
+    //     mushroom: mushroom
+    //   }
+    //   console.log("part1Got: ", data);
+    // })
+
+    mintingMushroomContract.on("tokenURIMade", (tokenURI) => {
+      let data = {
+        tokenURI: tokenURI
+      }
+      console.log("data: ", data);
+    })
+
+    mintingMushroomContract.on("tokenURIFound", (tokenID, tokenURI) => {
+      let data = {
+        id: tokenID,
+        uri: tokenURI
+      }
+
+      console.log("data found: ", data);
+    })
   }
   
 
@@ -114,24 +160,48 @@ function Home() {
       accessory: "Necklace",
       level: 3
   };
+
     const test1 = await metadataContract.setMushroomData(data);
     await test1.wait();
     console.log("Test1: ", test1);
     // const test2 = await metadataContract.mushroomAttributes(numb);
     // const test2 = await metadataContract.getMushroomData(1);
     // console.log("Test2: ", test2);
-    // // console.log("test2 data:", test2.element);
+    // console.log("test2 element:", test2.element);
+
+    await getMushroomAttributes();
 
     // const test3 = await metadataContract.getElement(1);
     // console.log("test3: ", test3);
 
-    // const test4 = await metadataContract.getMushroomBytes(1);
-    // console.log("test4: ", test4);
+    // const test5 = await metadataContract.makeTokenURI(1);
+    // console.log("test5: ", test5);
+  }
+  
+  const getMushroomAttributes = async () => {
 
-    const test5 = await metadataContract.makeTokenURI(1);
-    // await test5.wait();
-    console.log("test5: ", test5);
-  } 
+    const mushroomAttributes = await mintingMushroomContract.mushroomTokenAttributes(1);
+    console.log("mushroomAttributes: ", mushroomAttributes);
+
+    // const mushroomAttributes = await metadataContract.mushroomAttributes(1);
+    // console.log("mushroomAttributes: ", mushroomAttributes);
+    // console.log("element: ", mushroomAttributes.element);
+  };
+
+  const getElement = async () => {
+
+    const updateElement = await metadataContract.updateElement(1, "Water");
+    await updateElement.wait();
+    console.log("updateElement: ", updateElement);
+
+    // const getData = await metadataContract.getMushroomData(2, {gasLimit: 1000000});
+    // console.log("getData: ", getData);
+    // console.log("Get Element:", getData.element);
+    // const elementTxn = await metadataContract.getElement(1);
+    // console.log("element: ", elementTxn);
+    // const getArray = await metadataContract.getArray();
+    // console.log("Arr", getArray);
+  }
 
   return (
     <div className="App">
@@ -144,10 +214,11 @@ function Home() {
       <button onClick={() => withdraw()}>Withdraw</button>
       <button onClick={() => checkIfHasNFT()}>Check</button>
       <button onClick={() => retrieveURI()}>GetURI</button>
-      <button onClick={() => console.log("t")}>test</button>
       <button onClick={() => setURI()}>SetURI</button>
       <button onClick={() => increaseSpore()}>Inc</button>
       <button onClick={() => metadataTest()}>Test</button>
+      <button onClick={() => getElement()}>Element</button>
+      <button onClick={() => getMushroomAttributes()}>Attributes</button>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
-// require("hardhat-contract-sizer");
+require("hardhat-contract-sizer");
 // const { REACT_APP_ALCHEMY_API_KEY, REACT_APP_PRIVATE_KEY } = process.env;
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -28,4 +28,10 @@ module.exports = {
   // mocha: {
   //   timeout: 100000000
   // }
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: false,
+  },
 };

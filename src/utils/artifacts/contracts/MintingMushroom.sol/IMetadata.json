@@ -6,39 +6,165 @@
     {
       "inputs": [
         {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "_grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getMushroomData",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint32",
+              "name": "spores",
+              "type": "uint32"
+            },
+            {
+              "internalType": "string",
+              "name": "backgroundColor",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "head",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "eyes",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "mouth",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "element",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "weapon",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "armor",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "accessory",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "level",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct MushroomTest",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "_tokenId",
           "type": "uint256"
         },
         {
-          "internalType": "string",
-          "name": "weapon",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "armor",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "accessory",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "element",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "level",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "spores",
-          "type": "uint256"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint32",
+              "name": "spores",
+              "type": "uint32"
+            },
+            {
+              "internalType": "string",
+              "name": "backgroundColor",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "head",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "eyes",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "mouth",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "element",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "weapon",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "armor",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "accessory",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "level",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct MushroomTest",
+          "name": "mushroom",
+          "type": "tuple"
         }
       ],
       "name": "makeTokenURI",
@@ -49,7 +175,7 @@
           "type": "string"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],

@@ -15,6 +15,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
+// import "./IMetadata.sol";
+
 // interface IMetadata {
 //     function tokenURI(
 //         uint256 _tokenId,
@@ -28,16 +30,67 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 //     ) external view returns (string memory);
 // }
 
+struct MushroomTest {
+    uint256 id;
+    uint32 spores;
+    string backgroundColor;
+    string head;
+    string eyes;
+    string mouth;
+    string element;
+    string weapon;
+    string armor;
+    string accessory;
+    uint256 level;
+}
+
+interface IM1 {
+    function setData1(uint256 _tokenId) external returns (string memory);
+
+    function getData1(uint256 _tokenId)
+        external
+        view
+        returns (MushroomTest memory);
+
+    function getTokenURI(uint256 _tokenId)
+        external
+        view
+        returns (string memory);
+
+    function handleMint(uint256 _tokenId) external;
+}
+
 interface IMetadata {
-    function makeTokenURI(
-        uint256 _tokenId,
-        string memory weapon,
-        string memory armor,
-        string memory accessory,
-        string memory element,
-        uint256 level,
-        uint256 spores
-    ) external view returns (string memory);
+    struct Mushroom {
+        uint256 id;
+        uint32 spores;
+        string backgroundColor;
+        string head;
+        string eyes;
+        string mouth;
+        string element;
+        string weapon;
+        string armor;
+        string accessory;
+        uint256 level;
+    }
+
+    function getMushroomData(uint256 _tokenId)
+        external
+        view
+        returns (MushroomTest memory);
+
+    function makeTokenURI(uint256 _tokenId, MushroomTest memory mushroom)
+        external
+        returns (string memory);
+
+    function _grantRole(bytes32 role, address account) external;
+}
+
+interface ITokenURI {
+    function getTokenURI(uint256) external view returns (string memory);
+
+    function makeTokenURI(uint256 _tokenId) external returns (string memory);
 }
 
 contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
@@ -56,79 +109,47 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     uint16 public _maxPerWallet = 100;
     uint256 public _mintPrice = 0.01 ether;
 
-    // IMetadata public _metadataContract;
+    IMetadata private _metadataContract;
+    IM1 private M1Contract;
+    ITokenURI private ITokenURIContract;
 
-    // string[] backgroundColors = [
-    //     "Mint",
-    //     "Green",
-    //     "Orange",
-    //     "Yellow",
-    //     "Blue",
-    //     "Purple"
-    // ];
-    // string[] heads = ["Pointy", "Oval", "Round", "Flat"];
-    // string[] eyes = [
-    //     "Blank",
-    //     "Blush",
-    //     "X",
-    //     "Intrigued",
-    //     "Angry",
-    //     "Tired",
-    //     "Crossed",
-    //     "Rolled"
-    // ];
-    // string[] weapons = [
-    //     "Axe",
-    //     "Sword",
-    //     "Dagger",
-    //     "Scythe",
-    //     "Stick",
-    //     "Mallet",
-    //     "Spear"
-    // ];
-    // string[] elements = [
-    //     "Poison",
-    //     "Lightning",
-    //     "Grass",
-    //     "Fire",
-    //     "Ice",
-    //     "Earth"
-    // ];
-
-    struct Mushroom {
-        uint256 id;
-        //string name;
-        //string description;
-        uint32 spores;
-        string backgroundColor;
-        string head;
-        string eyes;
-        string mouth;
-        string element;
-        string weapon;
-        string armor;
-        string accessory;
-        // string background;
-        // string aura;
-        //string image;
-        uint256 level;
-    }
-
-    // struct test {
+    // struct MushroomTest {
     //     uint256 id;
-    //     string test;
+    //     uint32 spores;
+    //     string backgroundColor;
+    //     string head;
+    //     string eyes;
+    //     string mouth;
+    //     string element;
+    //     string weapon;
+    //     string armor;
+    //     string accessory;
+    //     uint256 level;
     // }
 
     // Mapping of tokenID to the mushroom attributes
-    mapping(uint256 => Mushroom) public mushroomTokenAttributes;
+    mapping(uint256 => MushroomTest) public mushroomTokenAttributes;
 
-    constructor(address admin) ERC721("Malicious Mushroom", "MUSH") {
+    // event tokenURIMade(string tokenURI);
+    event part1Made(uint256 tokenId, string part1);
+    event part1Got(uint256, MushroomTest mushroom);
+    event tokenURIFound(uint256 tokenId, string tokenURI);
+    event tokenURIMade(string tokenURI);
+
+    constructor(
+        address admin,
+        address metadataContract,
+        address m1Contract,
+        address tokenURIContract
+    ) ERC721("Malicious Mushroom", "MUSH") {
         // Increment tokenIDs to start at 1
         _tokenIds.increment();
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(UPDATER_ROLE, msg.sender);
         _grantRole(CONTRACT_ROLE, msg.sender);
-        // _metadataContract = IMetadata(metadataContract);
+        _metadataContract = IMetadata(metadataContract);
+        M1Contract = IM1(m1Contract);
+        ITokenURIContract = ITokenURI(tokenURIContract);
     }
 
     //overides
@@ -152,7 +173,11 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
 
     receive() external payable {}
 
-    function mintNFT(address recipient) public payable returns (uint256) {
+    function mintNFT(address recipient, MushroomTest memory mushroom)
+        public
+        payable
+        returns (uint256)
+    {
         require(_tokenIds.current() < _mintLimit, "Mint limit reached");
         require(msg.value >= (_mintPrice), "Insufficient funds");
         require(
@@ -162,7 +187,7 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
+        _internalMint(recipient);
         // _setTokenURI(newItemId, tokenURI);
 
         return newItemId;
@@ -175,27 +200,42 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
             balanceOf(msg.sender) < _maxPerWallet,
             "Max per wallet reached"
         );
-        _mint(wallet, newItemId);
-        // string memory weapon = weapons[newItemId % weapons.length];
-        // string memory element = elements[newItemId % elements.length];
-        // string memory head = string(
-        //     abi.encodePacked(heads[newItemId % heads.length], " ", element)
-        // );
-        mushroomTokenAttributes[newItemId] = Mushroom({
-            id: newItemId,
-            backgroundColor: "Red",
-            head: "head",
-            eyes: "Red",
-            mouth: "Red",
-            spores: 0,
-            weapon: "weapon",
-            armor: "None",
-            accessory: "Necklace",
-            element: "element",
-            level: 0
-        });
+        // _mint(wallet, newItemId);
+        M1Contract.handleMint(newItemId);
+        string memory madeTokenURI = ITokenURIContract.makeTokenURI(newItemId);
+        emit tokenURIMade(madeTokenURI);
+        string memory tokenURIs = ITokenURIContract.getTokenURI(newItemId);
+        emit tokenURIFound(newItemId, tokenURIs);
         _tokenIds.increment();
     }
+
+    // function _internalMint(address wallet, MushroomTest memory mushroom)
+    //     internal
+    // {
+    //     uint256 newItemId = _tokenIds.current();
+    //     require(newItemId < _mintLimit, "Mint limit reached");
+    //     require(
+    //         balanceOf(msg.sender) < _maxPerWallet,
+    //         "Max per wallet reached"
+    //     );
+    //     _mint(wallet, newItemId);
+    //     mushroomTokenAttributes[newItemId] = MushroomTest({
+    //         id: mushroom.id,
+    //         backgroundColor: mushroom.backgroundColor,
+    //         head: mushroom.head,
+    //         eyes: mushroom.eyes,
+    //         mouth: mushroom.mouth,
+    //         spores: mushroom.spores,
+    //         weapon: mushroom.weapon,
+    //         armor: mushroom.armor,
+    //         accessory: mushroom.accessory,
+    //         element: mushroom.element,
+    //         level: mushroom.level
+    //     });
+    //     string memory res = _metadataContract.makeTokenURI(newItemId, mushroom);
+    //     emit tokenURIMade(res);
+    //     _tokenIds.increment();
+    // }
 
     // function setMintLimit(uint32 newLimit) external onlyRole(UPDATER_ROLE) {
     //     _mintLimit = newLimit;
@@ -213,7 +253,10 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         return _tokenIds.current();
     }
 
-    function freeMint(address toWallet) external onlyRole(UPDATER_ROLE) {
+    function freeMint(address toWallet, MushroomTest memory mushroom)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
         _internalMint(toWallet);
     }
 
@@ -255,7 +298,8 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         external
         onlyRole(UPDATER_ROLE)
     {
-        mushroomTokenAttributes[tokenId].spores += amount;
+        // _metadataContract.mushroomAttributes(tokenId).spores += amount;
+        // mushroomTokenAttributes[tokenId].spores += amount;
     }
 
     function decreaseSpores(uint256 tokenId, uint32 amount)
@@ -307,22 +351,12 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     //     mushroomTokenAttributes[tokenId].element = element;
     // }
 
-    // function tokenURI(uint256 _tokenId)
-    //     public
-    //     view
-    //     override
-    //     returns (string memory)
-    // {
-    //     Mushroom memory mushroom = mushroomTokenAttributes[_tokenId];
-    //     return
-    //         _metadataContract.makeTokenURI(
-    //             _tokenId,
-    //             mushroom.weapon,
-    //             mushroom.armor,
-    //             mushroom.accessory,
-    //             mushroom.element,
-    //             mushroom.level,
-    //             mushroom.spores
-    //         );
-    // }
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
+        return M1Contract.getTokenURI(_tokenId);
+    }
 }

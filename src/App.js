@@ -7,7 +7,7 @@ import MetadataAbi from "./utils/artifacts/contracts/Metadata.sol/Metadata.json"
 // import MetadataAbi from "./utils/Metadata.json";
 import { ethers } from 'ethers';
 import { MintingMushroomAddress, MetadataAddress } from "./constants.js";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, HashRouter } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Home from './pages/Home';
 import Images from './pages/Images';
@@ -17,13 +17,20 @@ function App() {
   const { id, weapon, armor, accessory, mouth, eyes, head, backgroundColor } = useParams();
 
   return (
-    <BrowserRouter>
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route path="/" element={<Home />} />
+    //     {/* <Route path="images" element={<Images />} /> */}
+    //     <Route path="images/:backgroundColor/:head/:eyes/:mouth/:accessory/:weapon/:armor/" element={<Images />} />
+    //   </Routes>
+    // </BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="images" element={<Images />} /> */}
         <Route path="images/:backgroundColor/:head/:eyes/:mouth/:accessory/:weapon/:armor/" element={<Images />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 
 //   const [mintingMushroomContract, setMintingMushroomContract] = useState(null);

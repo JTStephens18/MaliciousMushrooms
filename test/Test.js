@@ -33,14 +33,18 @@ describe("Mushrooms", function() {
         };
         console.log("Data: ", data);
         // const metadataString = JSON.stringify(data);
-        const mushroomDataTxn = await metadata.setMushroomData(data, {nonce: 87});
+        const mushroomDataTxn = await metadata.setMushroomData(data);
         console.log("mushroom before");
-        await mushroomDataTxn.wait();
-        console.log("mushroom after");
+        // await mushroomDataTxn.wait();
+        console.log("mushroom after", mushroomDataTxn);
         const returnData = await metadata.getMushroomData(1);
         console.log("return before");
-        await returnData.wait();
+        // await returnData.wait();
         console.log("Return data: ", returnData);
+
+        const test = await metadata.mushroomAttributes(1);
+        console.log("test: ", test);
+        console.log("bg:", test.backgroundColor);
         expect(data.backgroundColor).to.equal("blue");
     });
 });

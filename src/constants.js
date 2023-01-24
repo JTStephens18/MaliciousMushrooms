@@ -1,4 +1,4 @@
-const MintingMushroomAddress  = "0x6B079C29921A0c94182D4FC9f56DE5993c941c95";
-const MetadataAddress = "0x96e837dD662C2Bbd0be97CaFc545e1D34c168dF1";
+const MintingMushroomAddress  = "0x2479f1D07F1d0A3C82d15b0ac4c9e86EB8ccAe9d";
+const MetadataAddress = "0x81380783613c613Ac8DFC4f9ba26c8600A9Ba4EF";
 
 export { MintingMushroomAddress, MetadataAddress };

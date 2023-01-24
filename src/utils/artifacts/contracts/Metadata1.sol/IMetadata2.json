@@ -1,0 +1,52 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IMetadata2",
+  "sourceName": "contracts/Metadata1.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "setData2",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "element",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "weapon",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "armor",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "accessory",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct MushroomData2",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
