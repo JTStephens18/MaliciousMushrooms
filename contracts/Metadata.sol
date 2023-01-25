@@ -15,8 +15,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
-import "./IMetadata.sol";
-
 contract Metadata is AccessControl, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
@@ -51,87 +49,6 @@ contract Metadata is AccessControl, Ownable {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(UPDATER_ROLE, msg.sender);
         _grantRole(CONTRACT_ROLE, msg.sender);
-    }
-
-    // function tokenURsssI(
-    //     uint256 _tokenId,
-    //     string memory _imageUrl,
-    //     string memory _weapon,
-    //     string memory _armor,
-    //     string memory _accessory,
-    //     string memory _element,
-    //     uint256 _level,
-    //     uint256 _spores
-    // ) public view returns (string memory) {
-    //     string memory json = Base64.encode(
-    //         abi.encodePacked(
-    //             '{"name": "Mushroom #',
-    //             Strings.toString(_tokenId),
-    //             '", "description": "Malicious Mushrooms Rawr", "image": "data:image/svg+xml;base64,',
-    //             _imageUrl, // UPDATE TO ACTUAL IMAGE.... OR NOT
-    //             '", "attributes": [',
-    //             '{"trait_type": "Weapon", "value": "',
-    //             _weapon,
-    //             '"},',
-    //             '{"trait_type": "Armor", "value": "',
-    //             _armor,
-    //             '"},',
-    //             '{"trait_type": "Accessory", "value": "',
-    //             _accessory,
-    //             '"},',
-    //             '{"trait_type": "Element", "value": "',
-    //             _element,
-    //             '"},',
-    //             '{"trait_type": "Level", "value": ',
-    //             Strings.toString(_level),
-    //             "},",
-    //             '{"trait_type": "Spores", "value": ',
-    //             Strings.toString(_spores),
-    //             "}"
-    //         )
-    //     );
-    //     return string(abi.encodePacked("data:application/json;base64,", json));
-    // }
-
-    // function getTokenURI(
-    //     uint256 tokenId,
-    //     uint32 spores,
-    //     string memory weapon,
-    //     string memory armor,
-    //     string memory accessory,
-    //     string memory element,
-    //     string memory ipfsImg
-    // ) external view returns (string memory) {
-    //     bytes memory json = abi.encodePacked(
-    //         '{"Description": "Malicious Mushroom", "image": "',
-    //         ipfsImg,
-    //         '", "attributes": [{"display_type": "boost_number", "trait_type": "Spores", "value": "',
-    //         Strings.toString(spores),
-    //         '"}, {"trait_type": "Weapon", "value": "',
-    //         weapon,
-    //         '"}, {"trait_type": "Armor", "value": "',
-    //         armor,
-    //         '"}, {"trait_type": "Accessory", "value": "',
-    //         accessory,
-    //         '"}, {"trait_type": "Element", "value": "',
-    //         element,
-    //         '", } {"trait_type": "Level", "value": "',
-    //         Strings.toString(1),
-    //         '"}]}'
-    //     );
-    //     return string(abi.encodePacked(_dataUriExtension, Base64.encode(json)));
-    // }
-
-    function returnExtension() external pure returns (string memory) {
-        return _dataUriExtension;
-    }
-
-    function setMushroomData(Mushroom memory mushroom)
-        external
-        onlyRole(UPDATER_ROLE)
-    {
-        mushroomAttributes[mushroom.id] = mushroom;
-        mushroomArray.push(mushroom);
     }
 
     function getMushroomData(uint256 _tokenId)

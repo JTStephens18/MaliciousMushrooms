@@ -122,7 +122,7 @@ contract Metadata1 is ERC721Enumerable, AccessControl {
         // this.makeTokenURI(_tokenId);
     }
 
-    function setData1(uint256 _tokenId) external returns (string memory) {
+    function setData1(uint256 _tokenId) external returns (Mushroom memory) {
         MushroomData2 memory test = M2Contract.setData2(_tokenId);
         string memory backgroundColor = backgroundColors[
             _tokenId % backgroundColors.length
@@ -131,100 +131,116 @@ contract Metadata1 is ERC721Enumerable, AccessControl {
         string memory eye = eyes[_tokenId % eyes.length];
         string memory mouth = mouths[_tokenId % mouths.length];
 
-        mushroomAttributes[_tokenId] = Mushroom(
-            _tokenId,
-            0,
-            backgroundColor,
-            head,
-            eye,
-            mouth,
-            test.element,
-            test.weapon,
-            test.armor,
-            test.accessory,
-            0
-        );
+        Mushroom memory temp = Mushroom({
+            id: _tokenId,
+            spores: 0,
+            backgroundColor: backgroundColor,
+            head: head,
+            eyes: eye,
+            mouth: mouth,
+            element: test.element,
+            weapon: test.weapon,
+            armor: test.armor,
+            accessory: test.accessory,
+            level: 0
+        });
 
         string memory part1 = Base64.encode(
             abi.encodePacked(backgroundColor, "/", head, "/", eye, "/", mouth)
         );
         emit part1Triggered(_tokenId, part1);
-        return part1;
+        mushroomAttributes[_tokenId] = temp;
+        return temp;
     }
 
-    function getData1(uint256 _tokenId) external returns (Mushroom memory) {
+    // function setData1(uint256 _tokenId) external returns (string memory) {
+    //     MushroomData2 memory test = M2Contract.setData2(_tokenId);
+    //     string memory backgroundColor = backgroundColors[
+    //         _tokenId % backgroundColors.length
+    //     ];
+    //     string memory head = heads[_tokenId % heads.length];
+    //     string memory eye = eyes[_tokenId % eyes.length];
+    //     string memory mouth = mouths[_tokenId % mouths.length];
+
+    //     mushroomAttributes[_tokenId] = Mushroom(
+    //         _tokenId,
+    //         0,
+    //         backgroundColor,
+    //         head,
+    //         eye,
+    //         mouth,
+    //         test.element,
+    //         test.weapon,
+    //         test.armor,
+    //         test.accessory,
+    //         0
+    //     );
+
+    //     string memory part1 = Base64.encode(
+    //         abi.encodePacked(backgroundColor, "/", head, "/", eye, "/", mouth)
+    //     );
+    //     emit part1Triggered(_tokenId, part1);
+    //     return part1;
+    // }
+
+    function increaseSpores(uint256 _tokenId, uint32 _amount) external {
+        mushroomAttributes[_tokenId].spores += _amount;
+    }
+
+    function decreaseSpores(uint256 tokenId, uint32 amount)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].spores -= amount;
+    }
+
+    function increaseLevel(uint256 tokenId, uint256 amount)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].level += amount;
+    }
+
+    function setWeapon(uint256 tokenId, string memory weapon)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].weapon = weapon;
+    }
+
+    function setArmor(uint256 tokenId, string memory armor)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].armor = armor;
+    }
+
+    function setAccessory(uint256 tokenId, string memory accessory)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].accessory = accessory;
+    }
+
+    // function setPet(uint256 tokenId, string memory pet)
+    //     external
+    //     onlyRole(UPDATER_ROLE)
+    // {
+    //     mushroomAttributes[tokenId].pet = pet;
+    // }
+
+    function setElement(uint256 tokenId, string memory element)
+        external
+        onlyRole(UPDATER_ROLE)
+    {
+        mushroomAttributes[tokenId].element = element;
+    }
+
+    function getData1(uint256 _tokenId)
+        external
+        view
+        returns (Mushroom memory)
+    {
         return mushroomAttributes[_tokenId];
     }
-
-    // function makeTokenURI(uint256 _tokenId) external returns (string memory) {
-    //     Mushroom memory MushroomAttributesTemp = mushroomAttributes[_tokenId];
-    //     string memory json = Base64.encode(
-    //         abi.encodePacked(
-    //             '{"name": "Mushroom #',
-    //             Strings.toString(_tokenId),
-    //             '", "description": "Malicious Mushrooms Rawr", "image": "',
-    //             string(
-    //                 abi.encodePacked(
-    //                     _baseTokenURI,
-    //                     MushroomAttributesTemp.backgroundColor,
-    //                     MushroomAttributesTemp.head,
-    //                     MushroomAttributesTemp.eyes,
-    //                     MushroomAttributesTemp.mouth,
-    //                     MushroomAttributesTemp.accessory,
-    //                     MushroomAttributesTemp.weapon,
-    //                     MushroomAttributesTemp.armor
-    //                 )
-    //             ),
-    //             '" "attributes": [',
-    //             '{"trait_type": "Weapon", "value": "',
-    //             MushroomAttributesTemp.weapon,
-    //             '"},',
-    //             '{"trait_type": "Armor", "value": "',
-    //             MushroomAttributesTemp.armor,
-    //             '"},',
-    //             '{"trait_type": "Accessory", "value": "',
-    //             MushroomAttributesTemp.accessory,
-    //             '"},',
-    //             '{"trait_type": "Element", "value": "',
-    //             MushroomAttributesTemp.element,
-    //             '"},',
-    //             '{"trait_type": "Level", "value": ',
-    //             Strings.toString(MushroomAttributesTemp.level),
-    //             // mushroomAttributes[_token.id].head,
-    //             "},",
-    //             '{"trait_type": "Spores", "value": ',
-    //             Strings.toString(MushroomAttributesTemp.spores),
-    //             // mushroomAttributes[_token.id].eyes,
-    //             "}]}"
-    //             // '{"name": "Mushroom #',
-    //             // Strings.toString(_tokenId),
-    //             // '", "description": "Malicious Mushrooms Rawr", "image": "https://ipfs.io/ipfs/QmR5tYrw1rqrKmNrma9BkfESag9PJhBCcNMhV31tZs5vZ1?filename=1.png"}'
-    //         )
-    //     );
-    //     _tokenURIs[_tokenId] = string(
-    //         abi.encodePacked("data:application/json;base64,", json)
-    //     );
-    //     return string(abi.encodePacked("data:application/json;base64,", json));
-    // }
-
-    // function setTokenURI(uint256 _tokenId, string memory _newTokenURI)
-    //     internal
-    //     returns (string memory)
-    // {
-    //     require(_exists(_tokenId), "Token must exist");
-    //     // require(
-    //     //     hasRole(UPDATER_ROLE, msg.sender),
-    //     //     "Caller is not a updater role"
-    //     // );
-    //     _tokenURIs[_tokenId] = _newTokenURI;
-    //     return _tokenURIs[_tokenId];
-    // }
-
-    // function getTokenURI(uint256 _tokenId)
-    //     external
-    //     view
-    //     returns (string memory)
-    // {
-    //     return _tokenURIs[_tokenId];
-    // }
 }

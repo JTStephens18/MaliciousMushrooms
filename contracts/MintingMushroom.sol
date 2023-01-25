@@ -15,21 +15,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
-// import "./IMetadata.sol";
-
-// interface IMetadata {
-//     function tokenURI(
-//         uint256 _tokenId,
-//         string memory _imageUrl,
-//         string memory _weapon,
-//         string memory _armor,
-//         string memory _accessory,
-//         string memory _element,
-//         uint256 _level,
-//         uint256 _spores
-//     ) external view returns (string memory);
-// }
-
 struct MushroomTest {
     uint256 id;
     uint32 spores;
@@ -45,7 +30,7 @@ struct MushroomTest {
 }
 
 interface IM1 {
-    function setData1(uint256 _tokenId) external returns (string memory);
+    function setData1(uint256 _tokenId) external returns (MushroomTest memory);
 
     function getData1(uint256 _tokenId)
         external
@@ -60,37 +45,13 @@ interface IM1 {
     function handleMint(uint256 _tokenId) external;
 }
 
-interface IMetadata {
-    struct Mushroom {
-        uint256 id;
-        uint32 spores;
-        string backgroundColor;
-        string head;
-        string eyes;
-        string mouth;
-        string element;
-        string weapon;
-        string armor;
-        string accessory;
-        uint256 level;
-    }
-
-    function getMushroomData(uint256 _tokenId)
-        external
-        view
-        returns (MushroomTest memory);
-
-    function makeTokenURI(uint256 _tokenId, MushroomTest memory mushroom)
-        external
-        returns (string memory);
-
-    function _grantRole(bytes32 role, address account) external;
-}
-
 interface ITokenURI {
     function getTokenURI(uint256) external view returns (string memory);
 
-    function makeTokenURI(uint256 _tokenId) external returns (string memory);
+    function makeTokenURI(uint256 _tokenId)
+        external
+        view
+        returns (string memory);
 }
 
 contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
@@ -109,23 +70,8 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     uint16 public _maxPerWallet = 100;
     uint256 public _mintPrice = 0.01 ether;
 
-    IMetadata private _metadataContract;
     IM1 private M1Contract;
     ITokenURI private ITokenURIContract;
-
-    // struct MushroomTest {
-    //     uint256 id;
-    //     uint32 spores;
-    //     string backgroundColor;
-    //     string head;
-    //     string eyes;
-    //     string mouth;
-    //     string element;
-    //     string weapon;
-    //     string armor;
-    //     string accessory;
-    //     uint256 level;
-    // }
 
     // Mapping of tokenID to the mushroom attributes
     mapping(uint256 => MushroomTest) public mushroomTokenAttributes;
@@ -135,10 +81,10 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
     event part1Got(uint256, MushroomTest mushroom);
     event tokenURIFound(uint256 tokenId, string tokenURI);
     event tokenURIMade(string tokenURI);
+    event changeMade(uint256 tokenId, MushroomTest mushroom);
 
     constructor(
         address admin,
-        address metadataContract,
         address m1Contract,
         address tokenURIContract
     ) ERC721("Malicious Mushroom", "MUSH") {
@@ -147,7 +93,6 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(UPDATER_ROLE, msg.sender);
         _grantRole(CONTRACT_ROLE, msg.sender);
-        _metadataContract = IMetadata(metadataContract);
         M1Contract = IM1(m1Contract);
         ITokenURIContract = ITokenURI(tokenURIContract);
     }
@@ -173,11 +118,7 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
 
     receive() external payable {}
 
-    function mintNFT(address recipient, MushroomTest memory mushroom)
-        public
-        payable
-        returns (uint256)
-    {
+    function mintNFT(address recipient) public payable returns (uint256) {
         require(_tokenIds.current() < _mintLimit, "Mint limit reached");
         require(msg.value >= (_mintPrice), "Insufficient funds");
         require(
@@ -200,8 +141,9 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
             balanceOf(msg.sender) < _maxPerWallet,
             "Max per wallet reached"
         );
-        // _mint(wallet, newItemId);
-        M1Contract.handleMint(newItemId);
+        _mint(wallet, newItemId);
+        // M1Contract.handleMint(newItemId);
+        mushroomTokenAttributes[newItemId] = M1Contract.setData1(newItemId);
         string memory madeTokenURI = ITokenURIContract.makeTokenURI(newItemId);
         emit tokenURIMade(madeTokenURI);
         string memory tokenURIs = ITokenURIContract.getTokenURI(newItemId);
@@ -253,10 +195,7 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         return _tokenIds.current();
     }
 
-    function freeMint(address toWallet, MushroomTest memory mushroom)
-        external
-        onlyRole(UPDATER_ROLE)
-    {
+    function freeMint(address toWallet) external onlyRole(UPDATER_ROLE) {
         _internalMint(toWallet);
     }
 
@@ -298,6 +237,11 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         external
         onlyRole(UPDATER_ROLE)
     {
+        // mushroomTokenAttributes[tokenId].spores += amount;
+        // emit changeMade(tokenId, mushroomTokenAttributes[tokenId]);
+        MushroomTest memory mushTemp = M1Contract.getData1(tokenId);
+        mushTemp.spores += amount;
+        emit changeMade(tokenId, mushTemp);
         // _metadataContract.mushroomAttributes(tokenId).spores += amount;
         // mushroomTokenAttributes[tokenId].spores += amount;
     }
@@ -357,6 +301,7 @@ contract MintingMushroom is ERC721Enumerable, AccessControl, Ownable {
         override
         returns (string memory)
     {
-        return M1Contract.getTokenURI(_tokenId);
+        return ITokenURIContract.makeTokenURI(_tokenId);
+        // return M1Contract.getTokenURI(_tokenId);
     }
 }

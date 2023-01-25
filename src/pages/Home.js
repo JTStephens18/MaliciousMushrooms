@@ -2,15 +2,19 @@ import '../App.css';
 import { useState, useEffect } from 'react';
 import MintingMushroomAbi from "../utils/artifacts/contracts/MintingMushroom.sol/MintingMushroom.json";
 import MetadataAbi from "../utils/artifacts/contracts/Metadata.sol/Metadata.json";
+import tokenURIAbi from "../utils/artifacts/contracts/TokenURI.sol/TokenURI.json";
+import M1Abi from "../utils/artifacts/contracts/Metadata1.sol/Metadata1.json";
 // import MintingMushroomAbi from "./utils/MintingMushroom.json";
 // import MetadataAbi from "./utils/Metadata.json";
 import { BigNumber, ethers } from 'ethers';
-import { MintingMushroomAddress, MetadataAddress } from "../constants.js";
+import { MintingMushroomAddress, MetadataAddress, tokenURIAddress, M1Address } from "../constants.js";
 
 function Home() {
 
   const [mintingMushroomContract, setMintingMushroomContract] = useState(null);
   const [metadataContract, setMetadataContract] = useState(null);
+  const [tokenURIContract, setTokenURIContract] = useState(null);
+  const [M1Contract, setM1Contract] = useState(null);
   const [wallet, setWallet] = useState(null);
 
   useEffect(() => {
@@ -43,6 +47,22 @@ function Home() {
       signer
     );
     setMetadataContract(metadataContract);
+
+    const tokenURIContract = new ethers.Contract(
+      tokenURIAddress,
+      tokenURIAbi.abi,
+      signer
+    );
+    
+    setTokenURIContract(tokenURIContract);
+
+    const M1Contract = new ethers.Contract(
+      M1Address,
+      M1Abi.abi,
+      signer
+    );
+
+    setM1Contract(M1Contract);
   };
 
   const getMintLimit = async () => {
@@ -72,7 +92,7 @@ function Home() {
   };
   console.log("wallet: ", wallet);
     // const freeMintTxn = await mintingMushroomContract.mintNFT(wallet, data, {value: ethers.utils.parseEther("0.01"), from: wallet});
-    const freeMintTxn = await mintingMushroomContract.freeMint(wallet, data);
+    const freeMintTxn = await mintingMushroomContract.freeMint(wallet);
     freeMintTxn.wait();
     console.log("Free mint: ", freeMintTxn);
 
@@ -122,7 +142,9 @@ function Home() {
   };
 
   const retrieveURI = async () => {
-    const uri = await metadataContract.returnExtension();
+    // const uri = await tokenURIContract.getTokenURI(1);
+    const uri = await mintingMushroomContract.tokenURI(1);
+    // await uri.wait();
     console.log("uri: ", uri);
   };
 
@@ -140,8 +162,16 @@ function Home() {
   }
 
   const increaseSpore = async () => {
-    const increaseSporeTxn = await mintingMushroomContract.increaseSpores(1, 1);
+    const increaseSporeTxn = await M1Contract.increaseSpores(1, 1);
     console.log("IncreaseSpore: ", increaseSporeTxn);
+    mintingMushroomContract.on("changeMade", (tokenId, mushroom) => {
+      let data = {
+        tokenId: parseInt(tokenId._hex),
+        mushroom: mushroom
+      };
+
+      console.log("Data: ", data);
+    })
   };
 
   const metadataTest = async () => {
@@ -203,6 +233,11 @@ function Home() {
     // console.log("Arr", getArray);
   }
 
+  const getData = async () => {
+    const data = await M1Contract.getData1(1);
+    console.log("Data:", data);
+  } 
+
   return (
     <div className="App">
       <button
@@ -219,6 +254,7 @@ function Home() {
       <button onClick={() => metadataTest()}>Test</button>
       <button onClick={() => getElement()}>Element</button>
       <button onClick={() => getMushroomAttributes()}>Attributes</button>
+      <button onClick={() => getData()}>Get data 1</button>
     </div>
   );
 }

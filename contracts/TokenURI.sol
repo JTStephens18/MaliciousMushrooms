@@ -37,7 +37,7 @@ contract TokenURI is ERC721URIStorage, AccessControl {
     bytes32 public constant UPDATER_ROLE = keccak256("UPDATER_ROLE");
     bytes32 public constant CONTRACT_ROLE = keccak256("CONTRACT_ROLE");
 
-    string public _baseTokenURI = "https://maliciousmushrooms.com/images/";
+    string public _baseTokenURI = "https://maliciousmushrooms.com/images/#/";
     string constant _dataUriExtension = "data:application/json;base64,";
 
     mapping(uint256 => string) public _tokenURIs;
@@ -63,61 +63,112 @@ contract TokenURI is ERC721URIStorage, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 
-    function makeTokenURI(uint256 _tokenId) external returns (string memory) {
+    function makeTokenURI(uint256 _tokenId)
+        external
+        view
+        returns (string memory)
+    {
         Mushroom memory MushroomAttributesTemp = M1Contract.getData1(_tokenId);
-        string memory json = Base64.encode(
-            abi.encodePacked(
-                '{"name": "Mushroom #',
-                Strings.toString(_tokenId),
-                '", "description": "Malicious Mushrooms Rawr", "image": "',
-                string(
-                    abi.encodePacked(
-                        _baseTokenURI,
-                        MushroomAttributesTemp.backgroundColor,
-                        "/",
-                        MushroomAttributesTemp.head,
-                        "/",
-                        MushroomAttributesTemp.eyes,
-                        "/",
-                        MushroomAttributesTemp.mouth,
-                        "/",
-                        MushroomAttributesTemp.accessory,
-                        "/",
-                        MushroomAttributesTemp.weapon,
-                        "/",
-                        MushroomAttributesTemp.armor
-                    )
-                ),
-                '", "attributes": [',
-                '{"trait_type": "Weapon", "value": "',
-                MushroomAttributesTemp.weapon,
-                '"},',
-                '{"trait_type": "Armor", "value": "',
-                MushroomAttributesTemp.armor,
-                '"},',
-                '{"trait_type": "Accessory", "value": "',
-                MushroomAttributesTemp.accessory,
-                '"},',
-                '{"trait_type": "Element", "value": "',
-                MushroomAttributesTemp.element,
-                '"},',
-                '{"trait_type": "Level", "value": ',
-                Strings.toString(MushroomAttributesTemp.level),
-                // mushroomAttributes[_token.id].head,
-                "},",
-                '{"trait_type": "Spores", "value": ',
-                Strings.toString(MushroomAttributesTemp.spores),
-                // mushroomAttributes[_token.id].eyes,
-                "}]}"
-                // '{"name": "Mushroom #',
-                // Strings.toString(_tokenId),
-                // '", "description": "Malicious Mushrooms Rawr", "image": "https://ipfs.io/ipfs/QmR5tYrw1rqrKmNrma9BkfESag9PJhBCcNMhV31tZs5vZ1?filename=1.png"}'
-            )
+        bytes memory dataURI = abi.encodePacked(
+            '{"name": "Mushroom #',
+            Strings.toString(_tokenId),
+            '", "description": "Malicious Mushrooms Rawr", "image": "',
+            string(
+                abi.encodePacked(
+                    _baseTokenURI,
+                    MushroomAttributesTemp.backgroundColor,
+                    "/",
+                    MushroomAttributesTemp.head,
+                    "/",
+                    MushroomAttributesTemp.eyes,
+                    "/",
+                    MushroomAttributesTemp.mouth,
+                    "/",
+                    MushroomAttributesTemp.accessory,
+                    "/",
+                    MushroomAttributesTemp.weapon,
+                    "/",
+                    MushroomAttributesTemp.armor
+                )
+            ),
+            '", "attributes": [',
+            '{"trait_type": "Weapon", "value": "',
+            MushroomAttributesTemp.weapon,
+            '"},',
+            '{"trait_type": "Armor", "value": "',
+            MushroomAttributesTemp.armor,
+            '"},',
+            '{"trait_type": "Accessory", "value": "',
+            MushroomAttributesTemp.accessory,
+            '"},',
+            '{"trait_type": "Element", "value": "',
+            MushroomAttributesTemp.element,
+            '"},',
+            '{"trait_type": "Level", "value": ',
+            Strings.toString(MushroomAttributesTemp.level),
+            // mushroomAttributes[_token.id].head,
+            "},",
+            '{"trait_type": "Spores", "value": ',
+            Strings.toString(MushroomAttributesTemp.spores),
+            // mushroomAttributes[_token.id].eyes,
+            "}]}"
         );
-        _tokenURIs[_tokenId] = string(
-            abi.encodePacked("data:application/json;base64,", json)
-        );
-        return string(abi.encodePacked("data:application/json;base64,", json));
+        // string memory json = Base64.encode(
+        //     abi.encodePacked(
+        //         '{"name": "Mushroom #',
+        //         Strings.toString(_tokenId),
+        //         '", "description": "Malicious Mushrooms Rawr", "image": "',
+        //         string(
+        //             abi.encodePacked(
+        //                 _baseTokenURI,
+        //                 MushroomAttributesTemp.backgroundColor,
+        //                 "/",
+        //                 MushroomAttributesTemp.head,
+        //                 "/",
+        //                 MushroomAttributesTemp.eyes,
+        //                 "/",
+        //                 MushroomAttributesTemp.mouth,
+        //                 "/",
+        //                 MushroomAttributesTemp.accessory,
+        //                 "/",
+        //                 MushroomAttributesTemp.weapon,
+        //                 "/",
+        //                 MushroomAttributesTemp.armor
+        //             )
+        //         ),
+        //         '", "attributes": [',
+        //         '{"trait_type": "Weapon", "value": "',
+        //         MushroomAttributesTemp.weapon,
+        //         '"},',
+        //         '{"trait_type": "Armor", "value": "',
+        //         MushroomAttributesTemp.armor,
+        //         '"},',
+        //         '{"trait_type": "Accessory", "value": "',
+        //         MushroomAttributesTemp.accessory,
+        //         '"},',
+        //         '{"trait_type": "Element", "value": "',
+        //         MushroomAttributesTemp.element,
+        //         '"},',
+        //         '{"trait_type": "Level", "value": ',
+        //         Strings.toString(MushroomAttributesTemp.level),
+        //         // mushroomAttributes[_token.id].head,
+        //         "},",
+        //         '{"trait_type": "Spores", "value": ',
+        //         Strings.toString(MushroomAttributesTemp.spores),
+        //         // mushroomAttributes[_token.id].eyes,
+        //         "}]}"
+        //     )
+        // );
+        // _tokenURIs[_tokenId] = string(
+        //     abi.encodePacked("data:application/json;base64,", json)
+        // );
+        return
+            string(
+                abi.encodePacked(
+                    "data:application/json;base64,",
+                    Base64.encode(dataURI)
+                )
+            );
     }
 
     function setTokenURI(uint256 _tokenId, string memory _newTokenURI)
@@ -125,10 +176,6 @@ contract TokenURI is ERC721URIStorage, AccessControl {
         returns (string memory)
     {
         require(_exists(_tokenId), "Token must exist");
-        // require(
-        //     hasRole(UPDATER_ROLE, msg.sender),
-        //     "Caller is not a updater role"
-        // );
         _tokenURIs[_tokenId] = _newTokenURI;
         return _tokenURIs[_tokenId];
     }

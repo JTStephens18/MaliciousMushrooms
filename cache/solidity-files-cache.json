@@ -38,7 +38,7 @@
     },
     "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\MintingMushroom.sol": {
       "lastModificationDate": 1240428288000,
-      "contentHash": "33adfdd72556a843da2fedaa1fb08e24",
+      "contentHash": "974f581f1d6c8072248b541ebf96d70f",
       "sourceName": "contracts/MintingMushroom.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -79,7 +79,6 @@
       ],
       "artifacts": [
         "IM1",
-        "IMetadata",
         "ITokenURI",
         "MintingMushroom"
       ]
@@ -744,7 +743,7 @@
     },
     "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\Metadata.sol": {
       "lastModificationDate": 1240428288000,
-      "contentHash": "2dae68b4dcbf1b417ff843e5fe29b459",
+      "contentHash": "b53950178152e196a66dd72da21c3ecc",
       "sourceName": "contracts/Metadata.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -778,8 +777,7 @@
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/utils/Strings.sol",
         "@openzeppelin/contracts/utils/Address.sol",
-        "@openzeppelin/contracts/utils/Base64.sol",
-        "./IMetadata.sol"
+        "@openzeppelin/contracts/utils/Base64.sol"
       ],
       "versionPragmas": [
         "^0.8.9"
@@ -788,79 +786,9 @@
         "Metadata"
       ]
     },
-    "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\IMetadata.sol": {
-      "lastModificationDate": 1240428288000,
-      "contentHash": "1398e6a442efda71e714211f37f3c748",
-      "sourceName": "contracts/IMetadata.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.9"
-      ],
-      "artifacts": [
-        "IMetadata"
-      ]
-    },
-    "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\Library.sol": {
-      "lastModificationDate": 1240428288000,
-      "contentHash": "ccab8fd66563367975e35b916e93a171",
-      "sourceName": "contracts/Library.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.9"
-      ],
-      "artifacts": [
-        "MushroomStruct"
-      ]
-    },
     "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\Metadata1.sol": {
       "lastModificationDate": 1240428288000,
-      "contentHash": "5809f898af6d58f6439257beefc8a6a7",
+      "contentHash": "fe765f4ea13a3bd8469e3a62b15c843a",
       "sourceName": "contracts/Metadata1.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -943,7 +871,7 @@
     },
     "D:\\Projects\\Malicious_Mushrooms\\main_mushroom\\contracts\\TokenURI.sol": {
       "lastModificationDate": 1240428288000,
-      "contentHash": "bd147c10159d917fbf3889329cf2d54b",
+      "contentHash": "4ec3cbcb039a3cd3c3a480fed7a79d36",
       "sourceName": "contracts/TokenURI.sol",
       "solcConfig": {
         "version": "0.8.17",
