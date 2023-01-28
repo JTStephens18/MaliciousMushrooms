@@ -24,34 +24,42 @@ const Images = ({ids}) => {
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.src = `https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`;
+        img.crossOrigin = "Anonymous";
         img.onload = function() {
             ctx.drawImage(img, 0, 0, 350, 350);
             var img2 = new Image();
             img2.src = "https://ik.imagekit.io/98sb9awea/skin/_0121_Skin.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673195645649";
+            img2.crossOrigin = "Anonymous";
             img2.onload = function() {
                 ctx.drawImage(img2, 0, 0, 350, 350);
                 var img3 = new Image();
                 img3.src = `https://ik.imagekit.io/98sb9awea/head/${routeParams.head}.png`;
+                img3.crossOrigin = "Anonymous";
                 img3.onload = function() {
                     ctx.drawImage(img3, 0, 0, 350, 350);
                     var img4 = new Image();
                     img4.src = `https://ik.imagekit.io/98sb9awea/eyes/${routeParams.eyes}.png`;
+                    img4.crossOrigin = "Anonymous";
                     img4.onload = function() {
                         ctx.drawImage(img4, 0, 0, 350, 350);
                         var img5 = new Image();
                         img5.src = `https://ik.imagekit.io/98sb9awea/mouth/${routeParams.mouth}.png`;
+                        img5.crossOrigin = "Anonymous";
                         img5.onload = function() {
                             ctx.drawImage(img5, 0, 0, 350, 350);
                             var img6 = new Image();
                             img6.src = `https://ik.imagekit.io/98sb9awea/accessory/${routeParams.accessory}.png`;
+                            img6.crossOrigin = "Anonymous";
                             img6.onload = function() {
                                 ctx.drawImage(img6, 0, 0, 350, 350);
                                 var img7 = new Image();
                                 img7.src = `https://ik.imagekit.io/98sb9awea/weapon/${routeParams.weapon}.png`;
+                                img7.crossOrigin = "Anonymous";
                                 img7.onload = function() {
                                     ctx.drawImage(img7, 0, 0, 350, 350);
                                     var img8 = new Image();
                                     img8.src = `https://ik.imagekit.io/98sb9awea/armor/${routeParams.armor}.png`;
+                                    img8.crossOrigin = "Anonymous";
                                     img8.onload = function() {
                                         ctx.drawImage(img8, 0, 0, 350, 350);
                                     }
@@ -74,6 +82,7 @@ const Images = ({ids}) => {
 
         var img = new Image();
         img.src = `https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`;
+        img.crossOrigin = "Anonymous";
         img.onload = function() {
             ctx.drawImage(img, 0, 0, 350, 350);
         }
