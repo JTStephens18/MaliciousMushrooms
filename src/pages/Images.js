@@ -48,7 +48,7 @@ const Images = ({ids}) => {
                         img5.onload = function() {
                             ctx.drawImage(img5, 0, 0, 350, 350);
                             var img6 = new Image();
-                            img6.src = `https://ik.imagekit.io/98sb9awea/accessory/${routeParams.accessory}.png`;
+                            img6.src = `https://ik.imagekit.io/98sb9awea/necklace/${routeParams.accessory}.png`;
                             img6.crossOrigin = "Anonymous";
                             img6.onload = function() {
                                 ctx.drawImage(img6, 0, 0, 350, 350);
