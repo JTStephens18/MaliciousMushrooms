@@ -53,16 +53,16 @@ const Images = ({ids}) => {
                             img6.onload = function() {
                                 ctx.drawImage(img6, 0, 0, 350, 350);
                                 var img7 = new Image();
-                                img7.src = `https://ik.imagekit.io/98sb9awea/weapon/${routeParams.weapon}.png`;
+                                img7.src = `https://ik.imagekit.io/98sb9awea/weapons/${routeParams.weapon}.png`;
                                 img7.crossOrigin = "Anonymous";
                                 img7.onload = function() {
                                     ctx.drawImage(img7, 0, 0, 350, 350);
-                                    var img8 = new Image();
-                                    img8.src = `https://ik.imagekit.io/98sb9awea/armor/${routeParams.armor}.png`;
-                                    img8.crossOrigin = "Anonymous";
-                                    img8.onload = function() {
-                                        ctx.drawImage(img8, 0, 0, 350, 350);
-                                    }
+                                    // var img8 = new Image();
+                                    // img8.src = `https://ik.imagekit.io/98sb9awea/armor/${routeParams.armor}.png`;
+                                    // img8.crossOrigin = "Anonymous";
+                                    // img8.onload = function() {
+                                    //     ctx.drawImage(img8, 0, 0, 350, 350);
+                                    // }
                                 }
                             }
                         }
