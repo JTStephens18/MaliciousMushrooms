@@ -37,7 +37,7 @@ contract TokenURI is ERC721URIStorage, AccessControl {
     bytes32 public constant UPDATER_ROLE = keccak256("UPDATER_ROLE");
     bytes32 public constant CONTRACT_ROLE = keccak256("CONTRACT_ROLE");
 
-    string public _baseTokenURI = "https://maliciousmushrooms.com/images/#/";
+    string public _baseTokenURI = "https://maliciousmushrooms.com/#/images/";
     string constant _dataUriExtension = "data:application/json;base64,";
 
     mapping(uint256 => string) public _tokenURIs;
@@ -88,7 +88,8 @@ contract TokenURI is ERC721URIStorage, AccessControl {
                     "/",
                     MushroomAttributesTemp.weapon,
                     "/",
-                    MushroomAttributesTemp.armor
+                    MushroomAttributesTemp.armor,
+                    ".png"
                 )
             ),
             '", "attributes": [',

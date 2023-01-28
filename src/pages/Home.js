@@ -238,6 +238,11 @@ function Home() {
     console.log("Data:", data);
   } 
 
+  const setWeapon = async () => {
+    const weaponTxn = await M1Contract.setWeapon(1, "Axe");
+    console.log("weaponTxmn: ", weaponTxn);
+  }
+
   return (
     <div className="App">
       <button
@@ -255,6 +260,7 @@ function Home() {
       <button onClick={() => getElement()}>Element</button>
       <button onClick={() => getMushroomAttributes()}>Attributes</button>
       <button onClick={() => getData()}>Get data 1</button>
+      <button onClick={() => setWeapon()}>Set weapon</button>
     </div>
   );
 }

@@ -58,40 +58,58 @@ contract Metadata1 is ERC721Enumerable, AccessControl {
     mapping(uint256 => string) public _tokenURIs;
 
     string[] private backgroundColors = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "blue",
-        "purple",
-        "pink",
-        "black",
-        "white",
-        "gray"
+        "Blue",
+        "Green",
+        "Orange",
+        "Purple",
+        "Red",
+        "Yellow"
+    ];
+
+    string[] private headColors = [
+        "Blue",
+        "Red",
+        "Purple",
+        "Green",
+        "Yellow",
+        "Brown"
     ];
 
     string[] private heads = ["Round", "Oval", "Triangle", "Flat"];
 
     string[] private eyes = [
-        "Eye 1",
-        "Eye 2",
-        "Eye 3",
-        "Eye 4",
-        "Eye 5",
-        "Eye 6",
-        "Eye 7",
-        "Eye 8"
+        "Circle",
+        "Concerned",
+        "Cross",
+        "Eyes1",
+        "Eyes2",
+        "Eyes3",
+        "Eyes5",
+        "Eyes6",
+        "Eyes9",
+        "Eyes11",
+        "Eyes12",
+        "Eyes13",
+        "Eyes14",
+        "Squint",
+        "X"
     ];
 
     string[] private mouths = [
-        "Mouth 1",
-        "Mouth 2",
-        "Mouth 3",
-        "Mouth 4",
-        "Mouth 5",
-        "Mouth 6",
-        "Mouth 7",
-        "Mouth 8"
+        "BuckTooth",
+        "Creeper",
+        "Frown",
+        "Happy",
+        "Kiss",
+        "Mouth8",
+        "Mouth9",
+        "Pursed",
+        "Smile",
+        "Smirk",
+        "Snout",
+        "Squiggly",
+        "Straight",
+        "Tongue"
     ];
 
     event part1Triggered(uint256 tokenId, string part1);
@@ -127,7 +145,11 @@ contract Metadata1 is ERC721Enumerable, AccessControl {
         string memory backgroundColor = backgroundColors[
             _tokenId % backgroundColors.length
         ];
+        string memory headColor = headColors[_tokenId % headColors.length];
         string memory head = heads[_tokenId % heads.length];
+        string memory headCombined = string(
+            abi.encodePacked(head, "-", headColor)
+        );
         string memory eye = eyes[_tokenId % eyes.length];
         string memory mouth = mouths[_tokenId % mouths.length];
 
@@ -135,7 +157,7 @@ contract Metadata1 is ERC721Enumerable, AccessControl {
             id: _tokenId,
             spores: 0,
             backgroundColor: backgroundColor,
-            head: head,
+            head: headCombined,
             eyes: eye,
             mouth: mouth,
             element: test.element,
