@@ -1,7 +1,27 @@
+/* body {
+  margin: 0px;
+  background: #0e0e0e;
+  height: 100%;
+} */
+
 .image-div {
   position: relative;
+  display: block;
+  margin: auto;
+  background-color: hsl(0, 0%, 100%);
+  transition: background-color 300ms;
+  /* top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
 }
 
 .image-div > img {
   position: absolute;
+}
+
+.windowImage {
+  display: block;
+  margin: auto;
+  background-color: hsl(0, 0%, 100%);
+  transition: background-color 300ms;
 }

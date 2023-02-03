@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, HashRouter } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Home from './pages/Home';
 import Images from './pages/Images';
+import Test from "./pages/Test";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* <Route path="images" element={<Images />} /> */}
         <Route path="images/:backgroundColor/:head/:eyes/:mouth/:accessory/:weapon/:armor/" element={<Images />} />
+        <Route path="images/:id" element={<Test />} />
       </Routes>
     </HashRouter>
   )

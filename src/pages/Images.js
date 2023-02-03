@@ -1,8 +1,11 @@
 import { Router, useParams } from "react-router-dom";
 import "./Images.css";
+import { useState, useEffect, useRef } from "react";
+import cat from "../utils/photos/cat.png"
 
 const Images = ({ids}) => {
 
+    const [dataURI, setDataURI] = useState(null);
     const routeParams = useParams();
 
     console.log("routeParams: ", routeParams);
@@ -20,8 +23,26 @@ const Images = ({ids}) => {
     // var newTab = window.open('about:blank', 'image from canvas');
     // newTab.document.write("<img src='" + url + "' alt='from canvas'/>");
 
-    const drawCanvas = () => {
-        var ctx = canvas.getContext('2d');
+    const firstRender = useRef(true);
+    useEffect(() => {
+        firstRender.current = false;
+    },[]);
+
+    useEffect(() => {
+        if(firstRender.current === false) {
+            drawCanvas();
+        }
+    }, [firstRender.current]);
+
+    useEffect(() => {
+        if(dataURI !== null) {
+            console.log("send uri", dataURI);
+            showDocument(dataURI, 'image/png');
+        }
+    }, [dataURI]);
+
+    const drawCanvas = async () => {
+        var ctx = document.getElementById('myCanvas').getContext('2d');
         var img = new Image();
         img.src = `https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`;
         img.crossOrigin = "Anonymous";
@@ -70,9 +91,15 @@ const Images = ({ids}) => {
                 }
             }
         }
+        const dataURIReturn = await makeDataURI();
+        setDataURI(dataURIReturn);
+    };
+
+    const makeDataURI = async () => {
         const dataURI = document.getElementById('myCanvas').toDataURL();
         console.log("dataURI: ", dataURI);
-    };
+        return dataURI;
+    }
 
     const draw2 = () => {
         var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -89,17 +116,67 @@ const Images = ({ids}) => {
 
         const dataURI = document.getElementById('myCanvas').toDataURL();
         console.log("dataURI: ", dataURI);
+        setDataURI(dataURI);
+    };
+
+    const openWindow = () => {
+        // let w = window.open(dataURI, "_blank");
+        // let img = new Image();
+        // img.src = dataURI;
+        // w.document.write(img.outerHTML);
+        // window.location.href = dataURI;
+        let win = window.open();
+        win.document.write('<iframe src="' + dataURI + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+    };
+
+    function base64ToArrayBuffer(_base64Str) {
+        var binaryString = window.atob(_base64Str);
+        var binaryLen = binaryString.length;
+        var bytes = new Uint8Array(binaryLen);
+        for (var i = 0; i < binaryLen; i++) {
+              var ascii = binaryString.charCodeAt(i);
+              bytes[i] = ascii;
+       }
+       return bytes;
+  }
+  
+  function showDocument(_base64Str, _contentType) {
+        // var byte = base64ToArrayBuffer(_base64Str);
+        var blob = dataURItoBlob(_base64Str);
+        window.open(URL.createObjectURL(blob), "_blank");
+  }
+
+    function dataURItoBlob(dataURI) {
+        var byteStr;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteStr = atob(dataURI.split(',')[1]);
+        else
+            byteStr = unescape(dataURI.split(',')[1]);
+    
+        var mimeStr = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    
+        var arr= new Uint8Array(byteStr.length);
+        for (var i = 0; i < byteStr.length; i++) {
+            arr[i] = byteStr.charCodeAt(i);
+        }
+    
+        return new Blob([arr], {type:mimeStr});
+    }
+
+    const test = () => {
+        let blob = dataURItoBlob(dataURI);
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "test.png";
+
+        a.click();
     }
 
     return (
         <div>
             {/* <h1>Images</h1>
             <h2>{routeParams.id}</h2> */}
-            <img 
-                id="img1"
-                src="test"
-            />
-            {/* <a href={`https://maliciousmushrooms.com/#/images/${routeParams.backgroundColor}/${routeParams.head}/${routeParams.eyes}/${routeParams.mouth}/${routeParams.accessory}/${routeParams.weapon}/${routeParams.armor}`}>
             <div className="image-div">
                     <img src={`https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`}></img>
                     <img src="https://ik.imagekit.io/98sb9awea/skin/_0121_Skin.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673195645649" alt="skin"></img>
@@ -109,14 +186,14 @@ const Images = ({ids}) => {
                     <img src={`https://ik.imagekit.io/98sb9awea/necklace/${routeParams.accessory}.png`} alt="necklace"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/weapons/${routeParams.weapon}.png`} alt="weapon"></img>
             </div>
-            </a> */}
 
 
             <canvas id="myCanvas" width="350" height="350"></canvas>
 
             <button onClick={() => drawCanvas()}>Draw</button>
             <button onClick={() => draw2()}>Draw2</button>
-
+            <button onClick={() => openWindow()}>Open</button>
+            <button onClick={() => test()}>Test</button>
         </div>
     );
 }
