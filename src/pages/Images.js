@@ -26,13 +26,14 @@ const Images = ({ids}) => {
     const firstRender = useRef(true);
     useEffect(() => {
         firstRender.current = false;
+        drawCanvas();
     },[]);
 
-    useEffect(() => {
-        if(firstRender.current === false) {
-            drawCanvas();
-        }
-    }, [firstRender.current]);
+    // useEffect(() => {
+    //     if(firstRender.current === false) {
+    //         drawCanvas();
+    //     }
+    // }, [firstRender.current]);
 
     useEffect(() => {
         if(dataURI !== null) {
@@ -175,9 +176,13 @@ const Images = ({ids}) => {
 
     return (
         <div>
+            <svg width="350" height="350">
+                <image width="350" height="350" href={dataURI}></image>
+            </svg>
             {/* <h1>Images</h1>
             <h2>{routeParams.id}</h2> */}
-            <div className="image-div">
+            {/* <div className="image-div">
+                <svg>
                     <img src={`https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`}></img>
                     <img src="https://ik.imagekit.io/98sb9awea/skin/_0121_Skin.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673195645649" alt="skin"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/head/${routeParams.head}.png`} alt="head"></img>
@@ -185,15 +190,17 @@ const Images = ({ids}) => {
                     <img src={`https://ik.imagekit.io/98sb9awea/mouth/${routeParams.mouth}.png`} alt="mouth"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/necklace/${routeParams.accessory}.png`} alt="necklace"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/weapons/${routeParams.weapon}.png`} alt="weapon"></img>
-            </div>
+                </svg>
+            </div> */}
 
-
+            {/* <svg> */}
             <canvas id="myCanvas" width="350" height="350"></canvas>
-
+            {/* </svg> */}
+{/* 
             <button onClick={() => drawCanvas()}>Draw</button>
             <button onClick={() => draw2()}>Draw2</button>
             <button onClick={() => openWindow()}>Open</button>
-            <button onClick={() => test()}>Test</button>
+            <button onClick={() => test()}>Test</button> */}
         </div>
     );
 }
