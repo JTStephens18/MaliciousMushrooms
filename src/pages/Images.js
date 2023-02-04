@@ -25,8 +25,9 @@ const Images = ({ids}) => {
 
     const firstRender = useRef(true);
     useEffect(() => {
-        firstRender.current = false;
-        drawCanvas();
+        // firstRender.current = false;
+        // drawCanvas();
+        // drawCanvas2();
     },[]);
 
     // useEffect(() => {
@@ -43,7 +44,8 @@ const Images = ({ids}) => {
     }, [dataURI]);
 
     const drawCanvas = async () => {
-        var ctx = document.getElementById('myCanvas').getContext('2d');
+        // var ctx = document.getElementById('myCanvas').getContext('2d');
+        var ctx = document.createElement('canvas').getContext('2d');
         var img = new Image();
         img.src = `https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`;
         img.crossOrigin = "Anonymous";
@@ -92,8 +94,12 @@ const Images = ({ids}) => {
                 }
             }
         }
-        const dataURIReturn = await makeDataURI();
-        setDataURI(dataURIReturn);
+        const dataURI = ctx.canvas.toDataURL();
+        // const dataURI = document.getElementById('myCanvas').toDataURL();
+        console.log("dataURI: ", dataURI);
+        setDataURI(dataURI);
+        // const dataURIReturn = await makeDataURI();
+        // setDataURI(dataURIReturn);
     };
 
     const makeDataURI = async () => {
@@ -101,6 +107,50 @@ const Images = ({ids}) => {
         console.log("dataURI: ", dataURI);
         return dataURI;
     }
+
+    const image = document.getElementById("mySVGImage");
+
+    const toDataURL = () => {
+        drawCanvas();
+        const canvas = document.createElement("canvas");
+
+        canvas.width = "350";
+        canvas.height = "350";
+
+        canvas.getContext('2d').drawImage(image, 0, 0);
+
+        const dataURL = canvas.toDataURL();
+        console.log("dataURL: ", dataURL);
+
+        // const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        const base64 = dataURL.replace('data:', '').replace(/^.+,/, '');
+        console.log("base64: ", base64);
+    }
+
+    // useEffect(() => {
+    //     const image = document.getElementById("mySVGImage");
+    //     if(image.complete) toDataURL();
+    //     else image.onload = toDataURL;
+    // }, []);
+
+    // const drawCanvas2 = async () => {
+    //     const image = document.getElementById("mySVGImage");
+    //     const toDataURL = () => {
+    //         const canvas = document.createElement("canvas");
+
+    //         canvas.width = image.naturalWidth;
+    //         canvas.height = image.naturalHeight;
+
+    //         canvas.getContext('2d').drawImage(image, 0, 0);
+
+    //         const dataURL = canvas.toDataURL();
+    //         console.log("dataURL: ", dataURL);
+
+    //         // const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    //         const base64 = dataURL.replace('data:', '').replace(/^.+,/, '');
+    //         console.log("base64: ", base64);
+    //     }
+    // }
 
     const draw2 = () => {
         var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -165,24 +215,28 @@ const Images = ({ids}) => {
     }
 
     const test = () => {
+        console.log("uri", dataURI);
         let blob = dataURItoBlob(dataURI);
 
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "test.png";
+        // const a = document.createElement("a");
+        // a.href = URL.createObjectURL(blob);
+        // a.download = "test.png";
 
-        a.click();
+        // a.click();
     }
 
     return (
         <div>
-            <svg width="350" height="350">
-                <image width="350" height="350" href={dataURI}></image>
-            </svg>
+            <img src={cat}></img>
+            {/* <svg width="350" height="350">
+                <image id="myImage" width="350" height="350" href={dataURI}></image>
+                <img src={cat}></img>
+            </svg> */}
             {/* <h1>Images</h1>
             <h2>{routeParams.id}</h2> */}
-            {/* <div className="image-div">
-                <svg>
+            <div className="image-div">
+                {/* <svg  xmlns="http://www.w3.org/2000/svg"
+   id="mySVGImage" width="350" height="350">
                     <img src={`https://ik.imagekit.io/98sb9awea/background_color/${routeParams.backgroundColor}.png`}></img>
                     <img src="https://ik.imagekit.io/98sb9awea/skin/_0121_Skin.png?ik-sdk-version=javascript-1.4.3&updatedAt=1673195645649" alt="skin"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/head/${routeParams.head}.png`} alt="head"></img>
@@ -190,13 +244,11 @@ const Images = ({ids}) => {
                     <img src={`https://ik.imagekit.io/98sb9awea/mouth/${routeParams.mouth}.png`} alt="mouth"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/necklace/${routeParams.accessory}.png`} alt="necklace"></img>
                     <img src={`https://ik.imagekit.io/98sb9awea/weapons/${routeParams.weapon}.png`} alt="weapon"></img>
-                </svg>
-            </div> */}
+                </svg> */}
+            </div>
 
-            {/* <svg> */}
-            <canvas id="myCanvas" width="350" height="350"></canvas>
-            {/* </svg> */}
-{/* 
+            {/* <canvas id="myCanvas" width="350" height="350"></canvas>
+
             <button onClick={() => drawCanvas()}>Draw</button>
             <button onClick={() => draw2()}>Draw2</button>
             <button onClick={() => openWindow()}>Open</button>
