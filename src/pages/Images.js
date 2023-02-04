@@ -28,6 +28,7 @@ const Images = ({ids}) => {
         // firstRender.current = false;
         // drawCanvas();
         // drawCanvas2();
+        openWindow();
     },[]);
 
     // useEffect(() => {
@@ -177,7 +178,8 @@ const Images = ({ids}) => {
         // w.document.write(img.outerHTML);
         // window.location.href = dataURI;
         let win = window.open();
-        win.document.write('<iframe src="' + dataURI + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+        win.document.write('<img src="' + cat + '" alt="from canvas"/>')
+        // win.document.write('<iframe src="' + cat + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
     };
 
     function base64ToArrayBuffer(_base64Str) {
@@ -227,7 +229,7 @@ const Images = ({ids}) => {
 
     return (
         <div>
-            <img src={cat}></img>
+            {/* <img src={cat}></img> */}
             {/* <svg width="350" height="350">
                 <image id="myImage" width="350" height="350" href={dataURI}></image>
                 <img src={cat}></img>
