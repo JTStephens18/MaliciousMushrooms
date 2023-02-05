@@ -243,6 +243,19 @@ function Home() {
     console.log("weaponTxmn: ", weaponTxn);
   }
 
+  const fetching = async () => {
+    // fetch("/test").then(
+    //   res => res.json()
+    // ).then(
+    //   data => {
+    //     console.log("data: ", data);
+    //   }
+    // )
+    const response = await fetch("/test");
+    const data = await response.json();
+    console.log("data: ", data);
+  }
+
   return (
     <div className="App">
       <button
@@ -261,6 +274,7 @@ function Home() {
       <button onClick={() => getMushroomAttributes()}>Attributes</button>
       <button onClick={() => getData()}>Get data 1</button>
       <button onClick={() => setWeapon()}>Set weapon</button>
+      <button onClick={() => fetching()}>Fetch</button>
     </div>
   );
 }

@@ -2,12 +2,28 @@ from fastapi import FastAPI
 import imageGenerator as ig
 from fastapi.responses import FileResponse
 from fastapi.responses import Response
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+    "localhost:3000",
+    "https://maliciousmushrooms.com",
+    "maliciousmushrooms.com"
+]
 
-@app.get("/")
-async def root():
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+
+@app.get("/test")
+def root():
     return {"message": "Hello World"}
 
 
