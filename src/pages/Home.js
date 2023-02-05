@@ -17,6 +17,8 @@ function Home() {
   const [M1Contract, setM1Contract] = useState(null);
   const [wallet, setWallet] = useState(null);
 
+  const [apiData, setApiData] = useState(null);
+
   useEffect(() => {
     loadBlockchainData();
   }, []);
@@ -244,16 +246,16 @@ function Home() {
   }
 
   const fetching = async () => {
-    // fetch("/test").then(
-    //   res => res.json()
-    // ).then(
-    //   data => {
-    //     console.log("data: ", data);
-    //   }
-    // )
-    const response = await fetch("/test");
-    const data = await response.json();
-    console.log("data: ", data);
+    fetch("/a").then(
+      res => res.json()
+    ).then(
+      data => {
+        console.log("data: ", data);
+      }
+    )
+    // const response = await fetch("/");
+    // const data = await response.json();
+    // console.log("data: ", data);
   }
 
   return (
